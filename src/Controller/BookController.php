@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Author;
 use App\Entity\Book;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -112,5 +113,58 @@ class BookController extends AbstractController
             ]);
         }
     }
+
+    /**
+     * @Route("/book/insertWithAuthor", name="insert_with_author_book")
+     */
+    public function insertWithAuthor(ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $author = new Author();
+
+        $author->setName("Manolo");
+        $book = new Book();
+
+        $book->setTitle("The Shadows of Dusk");
+        $book->setGenre("Mystery");
+        $book->setYear(2012);
+        $book->setPages(384);
+        $book->setAuthor($author);
+
+        $entityManager->persist($author);
+        $entityManager->persist($book);
+
+        $entityManager->flush();
+        return $this->render('book/book_data.html.twig', [
+            'book' => $book
+        ]);
+    }
+
+    /**
+     * @Route("/book/insertWithoutAuthor", name="insert_without_author_book")
+     */
+    public function insertWithoutAuthor(ManagerRegistry $doctrine): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $repository = $doctrine->getRepository(Author::class);
+
+        $author = $repository->findOneBy(["name" => "Manolo"]);
+
+        $book = new Book();
+
+        $book->setTitle("Whispers of the Forgotten Shore");
+        $book->setGenre("Historical Fiction");
+        $book->setYear(2017);
+        $book->setPages(312);
+        $book->setAuthor($author);;
+
+        $entityManager->persist($book);
+
+        $entityManager->flush();
+        return $this->render('book/book_data.html.twig', [
+            'book' => $book
+        ]);
+    }
+
 
 }

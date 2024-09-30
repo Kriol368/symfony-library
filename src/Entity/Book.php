@@ -37,6 +37,11 @@ class Book
      */
     private $year;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Author::class)
+     */
+    private $author;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Book
     public function setYear(int $year): self
     {
         $this->year = $year;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Author $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

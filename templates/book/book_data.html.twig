@@ -1,0 +1,8 @@
+<ul>
+    <li><strong>{{ book.title }}</strong></li>
+    <li><strong>Genre: </strong>{{ book.genre }}</li>
+    {% if book.author %}
+        <li><strong>Author: </strong>{{ book.author.name }}</li>
+    {% endif %}
+    <li><strong>Year: </strong>{{ book.year }}</li>
+</ul>
