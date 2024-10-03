@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
@@ -19,26 +20,31 @@ class Book
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="You must add a title")
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="You must add a genre")
      */
     private $genre;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="You must add a page number")
      */
     private $pages;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="You must add a year")
      */
     private $year;
 
     /**
      * @ORM\ManyToOne(targetEntity=Author::class)
+     * @Assert\NotBlank(message="You must add an author")
      */
     private $author;
 

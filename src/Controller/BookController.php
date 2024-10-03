@@ -4,10 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Author;
 use App\Entity\Book;
+use App\Form\BookType;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+    use Symfony\Component\Routing\Annotation\Route;
+
 
 
 class BookController extends AbstractController
@@ -20,6 +26,55 @@ class BookController extends AbstractController
         4 => ["title" => "Love and War", "genre" => "Romance", "year" => 2020, "pages" => 380],
         5 => ["title" => "Secrets of the Mind", "genre" => "Thriller", "year" => 2016, "pages" => 270]
     ];
+
+    /**
+     * @Route("/book/new  ", name="new_book")
+     */
+    public function new(ManagerRegistry $doctrine, Request $request) {
+        $book = new Book();
+
+        $form = $this->createForm(BookType::class, $book);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $book = $form->getData();
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($book);
+            $entityManager->flush();
+            return $this->redirectToRoute('find_book', ["title" => $book->getTitle()]);
+        }
+
+        return $this->render('book/new.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
+
+
+    /**
+     * @Route("/book/edit/{id}", name="edit_book", requirements={"id"="\d+"})
+     */
+    public function edit(ManagerRegistry $doctrine, Request $request, $id) {
+        $repository = $doctrine->getRepository(Book::class);
+        $book = $repository->find($id);
+
+        $form = $this->createForm(BookType::class, $book);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $book = $form->getData();
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($book);
+            $entityManager->flush();
+        }
+
+        return $this->render('book/new.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
+
+
 
 
 
