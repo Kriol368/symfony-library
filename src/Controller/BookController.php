@@ -105,16 +105,14 @@ class BookController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="book_delete", methods={"DELETE"})
+     * @Route("/book/{id}/delete", name="book_delete", methods={"POST"})
      */
     public function delete(Request $request, Book $book, EntityManagerInterface $entityManager): Response
     {
-        // Verifica que el usuario esté logeado
         if (!$this->getUser()) {
             return $this->redirectToRoute('index');
         }
 
-        // Verifica el token CSRF
         if ($this->isCsrfTokenValid('delete' . $book->getId(), $request->request->get('_token'))) {
             $entityManager->remove($book);
             $entityManager->flush();
@@ -122,6 +120,7 @@ class BookController extends AbstractController
 
         return $this->redirectToRoute('book_index');
     }
+
 
 
     /**
