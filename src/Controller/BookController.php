@@ -50,6 +50,16 @@ class BookController extends AbstractController
         ));
     }
 
+    /**
+     * @Route('/book/list', name: 'book_list')
+     */
+    public function list(){
+        $books = $this->getDoctrine()->getRepository(Book::class)->findAll();
+
+        return $this->render('book/index.html.twig', [
+            'books' => $books,
+        ]);
+    }
 
     /**
      * @Route("/book/edit/{id}", name="edit_book", requirements={"id"="\d+"})
