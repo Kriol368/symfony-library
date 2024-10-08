@@ -1,0 +1,16 @@
+{% extends 'book/base.html.twig' %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block body %}
+    <h1>{{ book.title }}</h1>
+    <p>Author: {{ book.author }}</p>
+
+    <a href="{{ path('book_edit', { id: book.id }) }}">Edit</a>
+    <form method="post" action="{{ path('book_delete', { id: book.id }) }}" style="display:inline;">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ book.id) }}">
+        <button type="submit">Delete</button>
+    </form>
+
+    <a href="{{ path('index') }}">Back to list</a>
+{% endblock %}
